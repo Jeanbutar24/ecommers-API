@@ -1,4 +1,4 @@
-const Cart = require("../model/Cart");
+const Address = require("../model/Address");
 const {
   verifyToken,
   verifyAndAuthToken,
@@ -7,22 +7,22 @@ const {
 
 const router = require("express").Router();
 
-// ADD CART
-router.post("/addProduct", verifyToken, async (req, res) => {
-  const newCart = new Cart(req.body);
+// ADD ADDRESS
+router.post("/addAddress", verifyToken, async (req, res) => {
+  const newAddress = new Address(req.body);
 
   try {
-    const addCart = await newCart.save(newCart);
-    res.status(201).json(addCart);
+    const addAddress = await newAddress.save(newAddress);
+    res.status(201).json(addAddress);
   } catch (err) {
     res.status(400).json(err);
   }
 });
 
-// CART UPDATE
+// ADDRESS UPDATE
 router.put("/:id", verifyAndAuthToken, async (req, res) => {
   try {
-    const updateCart = await Cart.findByIdAndUpdate(
+    const updateAddress = await Address.findByIdAndUpdate(
       req.params.id,
       {
         $set: req.body,
@@ -30,31 +30,31 @@ router.put("/:id", verifyAndAuthToken, async (req, res) => {
       { new: true }
     );
 
-    res.json(updateCart);
+    res.json(updateAddress);
   } catch (err) {
     res.status(400).json(err);
   }
 });
 
-// DELETE CART
+// DELETE Address
 router.delete("/:id", verifyToken, async (req, res) => {
   try {
-    const deletedCart = await Cart.findByIdAndDelete(req.params.id);
+    const deletedAddress = await Address.findByIdAndDelete(req.params.id);
 
     res.json({
-      messege: `${deletedCart.title} has been deleted`,
+      messege: `${deletedAddress.title} has been deleted`,
     });
   } catch (err) {
     res.status(405).json(err);
   }
 });
 
-//GET CART
+//GET Address
 router.get("/find/:userID", verifyAndAuthToken, async (req, res) => {
   try {
-    const getCart = await Cart.findOne({ userID: req.params.userID });
+    const getAddress = await Address.findOne({ userID: req.params.userID });
 
-    res.status(200).json(getCart);
+    res.status(200).json(getAddress);
   } catch (err) {
     res.status(400).json(err);
   }
@@ -63,9 +63,9 @@ router.get("/find/:userID", verifyAndAuthToken, async (req, res) => {
 //GET ALL
 router.get("/", verifyTokenAndAdmin, async (req, res) => {
   try {
-    const carts = await Cart.find();
+    const Addresss = await Address.find();
 
-    res.status(200).json(carts);
+    res.status(200).json(Addresss);
   } catch (err) {
     res.status(400).json(err);
   }
