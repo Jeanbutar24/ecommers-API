@@ -2,7 +2,7 @@ const router = require("express").Router();
 const User = require("../model/User");
 const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
-
+// const cookie = require("cookie");
 // Register
 router.post("/register", async (req, res) => {
   const newUser = new User({
@@ -47,7 +47,7 @@ router.post("/login", async (req, res) => {
       return;
     }
 
-    const accessToken = jwt.sign(
+    const token = jwt.sign(
       {
         id: user._id,
         isAdmin: user.isAdmin,
@@ -57,9 +57,12 @@ router.post("/login", async (req, res) => {
         expiresIn: "1d",
       }
     );
-    const { password, ...others } = user._doc;
 
-    res.status(200).json({ ...others, accessToken });
+    // res.setHeaders("Set-Cookie", cookie.serialize("token", token), {
+    //   httpOnly: true,
+    // });
+    const { password, ...others } = user._doc;
+    res.status(200).json({ ...others, token });
   } catch (err) {
     res.status(500).json(err);
   }
